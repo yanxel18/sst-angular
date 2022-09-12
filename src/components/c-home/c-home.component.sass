@@ -1,0 +1,192 @@
+.container_comp
+  flex: 1
+  padding: 4px
+  margin-bottom: 20px
+  min-height: 480px
+  position: inherit
+  height: 100% !important
+  min-width: 300px
+  border: 1px #dddddd solid
+  vertical-align: top
+  overflow: hidden
+.table-container
+  min-width: 300px
+  width: 100%
+  vertical-align: center
+  height:75% !important
+  transition: all 0.2s ease-in-out
+  padding: 0px
+  overflow: auto
+  z-index: 2
+.loader
+  height: 100%
+table
+  width: 100%
+.paginator
+  margin: 0px
+  padding: 0px
+  vertical-align: bottom !important
+  flex: 1
+  z-index: 1
+tr.detail-row
+  height: 0
+
+tr.element-row:not(.expanded-row):hover
+  background: #e7e7e7
+
+tr.inner-element-row:hover
+  background: #e4e4e4
+
+tr.element-row:not(.expanded-row):active
+  background: #efefef
+
+
+.element-row td
+  border-bottom-width: 0
+
+
+
+.inner-table
+  width:100%
+
+.inner-table mat-form-field
+  margin-top: 15px
+  width: 100%
+
+.gray
+  background-color: #f5f5f5
+.innergray
+  background-color: #f5f5f5
+
+
+.mat-cell,
+.mat-header-cell
+  word-wrap: initial
+  display: table-cell
+  padding: 0px 10px
+  line-break: unset
+  white-space: nowrap
+  overflow: hidden
+  vertical-align: middle
+.mat-row .sampletd
+  height: auto
+
+.mat-cell .sampletd
+  padding: 8px 8px 8px 0
+
+.button-resize
+  z-index: 6
+  margin-right:12px
+  height:24px
+  width: 24px
+.button-resize .mat-icon
+  font-size:16px !important
+  padding-bottom: 16px
+.add-button-icon
+  padding-right: 10px
+.add-button.mat-raised-button
+  height: 40px
+  color: #f0fff3
+  background-color: #06b800
+  margin-bottom: 16px !important
+
+
+.csv-button.mat-raised-button
+  height: 40px
+  color: #f0fff3
+  margin-bottom: 16px !important
+
+.search-button-container
+  width: 100%
+  min-height: 60px
+  padding:0px 10px 0px 8px
+  position: inherit
+  margin-bottom: 0px
+
+
+.spacer
+  flex: 1 1 auto
+.filler
+  flex: 1 1
+.search-box-input
+  ::ng-deep .mat-form-field-outline-start
+    min-width: 30px
+    border-radius: 30px 0 0 30px !important
+.search-box-input
+  ::ng-deep .mat-form-field-outline-end
+    border-radius: 0px 30px 30px 0 !important
+.search-label
+  padding-left: 15px
+.search-box-input
+  width: 350px
+.search-box-input.mat-focused label
+  background-color: red
+.fieldflex
+  width: 350px
+  font-size: 12px
+.container
+  display: inline-block
+  border:1px solid red
+  height: 30px
+.export-form
+  column-gap: 10px
+  padding-top: 10px
+.export-form2
+  column-gap: 10px
+.action-form-buttons
+  column-gap: 10px
+  row-gap:10px
+.home-buttons-layouts
+  column-gap: 10px
+  width: 100%
+.reset-button.mat-stroked-button
+  color: #f0fff3
+  background-color: #06b800
+  width: 100px
+  height:40px
+.buttons.mat-stroked-button
+  width: 100px
+  height:40px
+.button-close.mat-stroked-button
+  width: 100px
+  height:40px
+.form-title
+  padding:10px 0px 0px 10px
+  height:50px
+.not-found-row
+  text-align: center
+@media screen and (max-width: 1400px)
+  .fieldflex
+    flex: 1 1 auto
+@media screen and (max-width: 767px)
+  .search-box-input
+    flex: 1 1 auto
+  .fieldflex
+    flex: 1 1 auto
+  .add-button.mat-raised-button
+    flex: 1 1 auto
+  .csv-button.mat-raised-button
+    flex: 1 1 auto
+  .reset-button
+    flex: 1 1 auto
+  .container_comp
+    min-height: 950px
+  .buttons.mat-stroked-button
+    flex: 1 1 auto
+  .button-close.mat-stroked-button
+    flex: 1 1 auto
+@media screen and (max-width: 530px)
+  .fieldflex
+    flex: 1 1 auto
+  .add-button.mat-raised-button
+    min-width: 120px
+    flex: 1 1 auto
+    margin-left:0px
+  .csv-button.mat-raised-button
+    min-width: 120px
+    flex: 1 1 auto
+    margin-left:0px
+  .filler
+    display: none
+  .search-box-input
+    flex: 1

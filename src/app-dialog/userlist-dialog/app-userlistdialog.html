@@ -1,0 +1,63 @@
+<div fxLayout="col wrap">
+  <h2 mat-dialog-title>ユーザー管理</h2> <span class="spacer"></span>
+  <button (click)="openDialogRegister()" *ngIf="userlist" mat-mini-fab class="add-button">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+<div fxLayout="col wrap" fxLayoutAlign="center center" *ngIf="!userlist">
+  <mat-spinner [diameter]="60"></mat-spinner>
+</div>
+<div fxLayout="col wrap" fxLayoutAlign="center center" *ngIf="userlist">
+  <mat-form-field appearance="outline" class="fieldflex search-box-input">
+    <mat-label>名前/拠点で検索</mat-label>
+    <input matInput (keyup)="search($event)" placeholder="名前/拠点" #input>
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+</div>
+<div mat-dialog-content *ngIf="userlist">
+  <div fxLayout="col wrap" fxLayoutAlign="center center">
+    <div *ngFor="let x of userlist">
+      <mat-card class="user-card mat-elevation-z3">
+        <div class="vert-button">
+          <button [matMenuTriggerFor]="menu" mat-icon-button>
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="openDialogUserUpdate(x)">
+              <mat-icon>edit</mat-icon>修正
+            </button>
+            <button mat-menu-item (click)="openDialogUpdatePass(x)">
+              <mat-icon>vpn_key</mat-icon>パスワード変更
+            </button>
+            <button mat-menu-item (click)="deleteAccount(x)">
+              <mat-icon>delete_forever</mat-icon>削除
+            </button>
+          </mat-menu>
+        </div>
+        <div fxLayout="col wrap">
+          <div mat-card-avatar class="header-image"></div>
+          <div class="card-content-title">
+            <mat-card-title class="card-title">{{x.su_fullname}}</mat-card-title>
+            <mat-card-subtitle class="card-sub-title"> {{x.su_email}}</mat-card-subtitle>
+            <div class="card-content">
+              <mat-card-subtitle class="card-sub-title">登録拠点:{{x.stb_base_desc}}</mat-card-subtitle>
+              <mat-card-subtitle class="card-sub-title">生産グループ:{{x.stg_description}}</mat-card-subtitle>
+              <mat-card-subtitle class="card-sub-title">GID:{{x.su_gid_full}}</mat-card-subtitle>
+              <mat-card-subtitle class="card-sub-title">内線:{{x.su_local_phone}}</mat-card-subtitle>
+              <mat-card-subtitle class="card-sub-title">権限:{{x.st_acclvl_desc}}</mat-card-subtitle>
+            </div>
+          </div>
+        </div>
+        <mat-card-content class="card-content">
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<mat-divider></mat-divider>
+<div mat-dialog-actions fxLayout="col wrap" fxLayoutAlign="center center">
+  <button type="button" (click)="closeDialog()" mat-stroked-button class="actionbuttons">
+    <mat-icon>cancel</mat-icon>
+  </button>
+</div>

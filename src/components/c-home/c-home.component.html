@@ -1,0 +1,179 @@
+<mat-card class="container_comp mat-elevation-z0" fxLayout="row wrap" fxLayoutAlign="center">
+  <div class="search-button-container mat-elevation-z0" class="home-buttons-layouts" fxLayout="col wrap"
+    fxLayoutAlign="center center" >
+    <mat-form-field appearance="outline" class="search-box-input fieldflex">
+      <input matInput [(ngModel)]="searchText" (keyup)="applyFilter($event)" placeholder="例:SST00000000">
+      <button type="button" mat-icon-button matSuffix (click)="clearTextSearch()">
+        <mat-icon>{{searchText === "" ? 'search' : 'close'}}</mat-icon>
+      </button>
+    </mat-form-field>
+    <span class="filler"></span>
+    <button (click)="openDialogSSTExport()" class="csv-button" mat-raised-button color="primary">
+      <mat-icon class="add-button-icon">archive</mat-icon>CSVエクスポート
+    </button>
+    <button (click)="addSST()" class="add-button" *ngIf="(AccessRights | async)?.sar_sst_create" mat-raised-button>
+      <mat-icon class="add-button-icon">add_circle</mat-icon>新規登録
+    </button>
+  </div>
+
+  <mat-card #tablecontainer (scroll)="onScroll()" class="table-container mat-elevation-z6">
+
+    <div class="loader" fxLayout="col wrap" fxLayoutAlign="center center" *ngIf="spinnerBox.LoadSuccess">
+      <ngx-skeleton-loader class="loader-skeleton"
+      count="6"
+      appearance="circle"
+    ></ngx-skeleton-loader>
+    </div>
+    <table mat-table *ngIf="!spinnerBox.LoadSuccess" [dataSource]="sstDataSource" multiTemplateDataRows
+      class="mat-elevation-z0">
+      <ng-container matColumnDef="operation">
+        <th mat-header-cell *matHeaderCellDef> 操作 </th>
+        <td mat-cell *matCellDef="let d">
+          <button class="button-resize" [disabled]="!d.sstfiles" (click)="downloadFile(d)" mat-icon-button
+            mat-raised-button>
+            <mat-icon>cloud_download</mat-icon>
+          </button>
+          <button class="button-resize" color="primary" (click)="editSST(d)" mat-icon-button mat-raised-button>
+            <ng-template #edit>
+              <mat-icon>edit</mat-icon>
+            </ng-template>
+            <ng-template #readonly>
+              <mat-icon>visibility</mat-icon>
+            </ng-template>
+            <ng-container *ngIf="(AccessRights | async)?.sar_sst_update==0; then readonly; else edit">
+            </ng-container>
+          </button>
+          <button class="button-resize" color="warn" *ngIf="(AccessRights | async)?.sar_sst_delete"
+            (click)="deleteSST(d)" mat-icon-button mat-raised-button>
+            <mat-icon>delete_forever</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="sst_num">
+        <th mat-header-cell hidden="true" *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let d"> {{d.sst_num}} </td>
+      </ng-container>
+      <ng-container matColumnDef="sst_doc_number">
+        <th mat-header-cell *matHeaderCellDef> 文書番号 </th>
+        <td mat-cell *matCellDef="let d"> {{d.sst_doc_number}} </td>
+      </ng-container>
+      <ng-container matColumnDef="sst_apply_date">
+        <th mat-header-cell *matHeaderCellDef> 登録日時 </th>
+        <td mat-cell *matCellDef="let d"> {{d.sst_apply_date}} </td>
+      </ng-container>
+      <ng-container matColumnDef="sp_progress_status">
+        <th mat-header-cell *matHeaderCellDef> 回答状況 </th>
+        <td mat-cell *matCellDef="let d"> {{d.sp_progress_status}} </td>
+      </ng-container>
+      <ng-container matColumnDef="sst_deployment_demand">
+        <th mat-header-cell *matHeaderCellDef> 展開案件 </th>
+        <td mat-cell *matCellDef="let d"> {{trimRemarks(d.sst_deployment_demand)}} </td>
+      </ng-container>
+      <ng-container matColumnDef="sst_activity_content">
+        <th mat-header-cell *matHeaderCellDef> 活動内容 </th>
+        <td mat-cell *matCellDef="let d"> {{trimRemarks(d.sst_activity_content)}} </td>
+      </ng-container>
+      <ng-container matColumnDef="sst_expected_effect">
+        <th mat-header-cell *matHeaderCellDef> 期待効果 </th>
+        <td mat-cell *matCellDef="let d"> {{trimRemarks(d.sst_expected_effect)}} </td>
+      </ng-container>
+      <ng-container matColumnDef="sst_tools_used">
+        <th mat-header-cell *matHeaderCellDef> 使用ツール </th>
+        <td mat-cell *matCellDef="let d"> {{trimRemarks(d.sst_tools_used)}} </td>
+      </ng-container>
+      <ng-container matColumnDef="stb_base_name">
+        <th mat-header-cell *matHeaderCellDef> 登録拠点 </th>
+        <td mat-cell *matCellDef="let d"> {{d.stb_base_name}} </td>
+      </ng-container>
+      <ng-container matColumnDef="sp_process_desc">
+        <th mat-header-cell *matHeaderCellDef> 登録工程 </th>
+        <td mat-cell *matCellDef="let d"> {{d.sp_process_desc}} </td>
+      </ng-container>
+      <ng-container matColumnDef="sst_fullname">
+        <th mat-header-cell *matHeaderCellDef> 登録者 </th>
+        <td mat-cell *matCellDef="let d"> {{d.sst_fullname}} </td>
+      </ng-container>
+      <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="sstTableDataColumn.length">
+          <div class="inner-table mat-elevation-z0" *ngIf="element.sstreply?.length"
+            [@detailExpand]="element.sst_num == sstexpandedElement?.sst_num ?
+             'expanded' : element == sstexpandedElement ?
+             'expanded' : 'collapsed'" fxLayoutAlign="center center">
+            <div class="inner-table mat-elevation-z1" *ngIf="sstexpandedElement">
+              <table mat-table [dataSource]="element.sstreply">
+                <ng-container matColumnDef="operation">
+                  <th mat-header-cell *matHeaderCellDef> 操作 </th>
+                  <td mat-cell *matCellDef="let d">
+                    <button class="button-resize" [disabled]="d.str_filecount===0" (click)="downloadSSTReplyFile(d)"
+                      mat-icon-button mat-raised-button>
+                      <mat-icon>cloud_download</mat-icon>
+                    </button>
+                    <button class="button-resize" (click)="editSSTReply(d)" color="primary" mat-icon-button
+                      mat-raised-button>
+                      <ng-template #edit>
+                        <mat-icon>edit</mat-icon>
+                      </ng-template>
+                      <ng-template #readonly>
+                        <mat-icon>visibility</mat-icon>
+                      </ng-template>
+                      <ng-container *ngIf="(AccessRights | async)?.sar_sst_update==0; then readonly; else edit">
+                      </ng-container>
+                    </button>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="stb_base_desc">
+                  <th mat-header-cell *matHeaderCellDef> 拠点 </th>
+                  <td mat-cell *matCellDef="let d"> {{d.stb_base_desc}} </td>
+                </ng-container>
+                <ng-container matColumnDef="sp_icon">
+                  <th mat-header-cell *matHeaderCellDef> 回答状況 </th>
+                  <td mat-cell *matCellDef="let d"> {{d.sp_icon}} </td>
+                </ng-container>
+                <ng-container matColumnDef="sp_progress_desc">
+                  <th mat-header-cell *matHeaderCellDef> - </th>
+                  <td mat-cell *matCellDef="let d"> {{d.sp_progress_desc}} </td>
+                </ng-container>
+                <ng-container matColumnDef="str_created_byname">
+                  <th mat-header-cell *matHeaderCellDef> 回答者 </th>
+                  <td mat-cell *matCellDef="let d"> {{d.str_created_byname}} </td>
+                </ng-container>
+                <ng-container matColumnDef="str_completed_date">
+                  <th mat-header-cell *matHeaderCellDef> 着手予定日 </th>
+                  <td mat-cell *matCellDef="let d"> {{d.str_schedulestart_date}} </td>
+                </ng-container>
+                <ng-container matColumnDef="str_schedulestart_date">
+                  <th mat-header-cell *matHeaderCellDef> 完了予定日 </th>
+                  <td mat-cell *matCellDef="let d"> {{d.str_completed_date}} </td>
+                </ng-container>
+                <ng-container matColumnDef="str_scheduleend_date">
+                  <th mat-header-cell *matHeaderCellDef> 完了日 </th>
+                  <td mat-cell *matCellDef="let d"> {{d.str_scheduleend_date}} </td>
+                </ng-container>
+                <ng-container matColumnDef="str_remarks">
+                  <th mat-header-cell *matHeaderCellDef> 備考 </th>
+                  <td mat-cell *matCellDef="let d"> {{ trimRemarks(d.str_remarks)}} </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="sstTableInnerColumn"></tr>
+                <tr mat-row *matRowDef="let row; let even = even; columns: sstTableInnerColumn;"
+                  class="inner-element-row" [ngClass]="{innergray: even}"></tr>
+              </table>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="sstTableDataColumn; sticky: true"></tr>
+      <tr mat-row *matRowDef="let element;columns: sstTableDataColumn;" [class.element-row]="element.sstreply?.length"
+        [@detailExpand]="sstexpandedElement === element" (click)="toggleRow(element); $event.preventDefault()">
+      </tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell not-found-row" colspan="12"> "{{searchText}}"と一致がありません。</td>
+      </tr>
+    </table>
+  </mat-card>
+  <mat-card fxLayout="row wrap" class="paginator mat-elevation-z0" fxLayoutAlign="center">
+    <mat-paginator #SSTTablePaginator [pageSizeOptions]="[15, 30, 45]" (page)="getTablePageNum($event)"
+      showFirstLastButtons></mat-paginator>
+  </mat-card>
+</mat-card>

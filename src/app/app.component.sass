@@ -1,0 +1,152 @@
+.container
+  display: flex
+  flex-direction: column
+  position: absolute
+  top: 0
+  bottom: 0
+  left: 0
+  right: 0
+
+.web-content
+  display: flex
+.is-mobile .toolbar
+  position: fixed
+  /* Make sure the toolbar will stay on top of the content as it scrolls past. */
+  z-index: 2
+.menu-button
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: flex-start
+    font-size: 1rem
+    border-radius: 0px
+    width: 320px
+    margin-bottom: 5px
+    mat-icon
+        margin-right: 10px
+table
+  width: 100%
+.mat-button.mat-primary .mat-button-focus-overlay
+  background-color: red
+.save-button.mat-raised-button
+  color: #f0fff3
+  background-color: #06b800
+  width:150px
+  height: 50px
+.actionbuttons
+  width:150px
+  height: 50px
+.button-menu
+  margin: 10px
+  width: 100px
+.button-acc-menu
+  margin: 10px
+  width: 120px
+  background-color: #ffd664
+.spacer
+  flex: 1 1
+.app-name
+  margin-left: 8px
+  font-size: 21px
+.body-wrapper
+  min-width: 360px
+  height:95%
+.sidenav-container
+  /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+     causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+  flex: 1
+  padding: 10px
+  min-width: 320px
+  min-height: 320px
+.sidenav
+  /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+     causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+  flex: 1
+tr.element-row:hover
+  background: #e4e4e4
+.is-mobile .sidenav-container
+  /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
+     `<body>` to be our scrolling element for mobile layouts. */
+  flex: 1 0 auto
+
+.form-group
+  column-gap: 10px
+.form-group2
+  column-gap: 10px
+  padding-top: 10px
+.activity-form
+  column-gap: 10px
+.activitiy-group-list
+  padding-top:10px
+  column-gap: 10px
+  min-width: 100px
+.group-list
+  font-size: 12px
+.activate-group-button.mat-raised-button
+  color: #f0fff3
+  background-color: #06b800
+  width: 50px
+  height: 40px
+  margin-bottom: 16px !important
+  flex: 1 1
+mat-form-field
+  flex:1
+@media screen and (max-width: 560px)
+  .user-card
+    width: 100%
+  .activate-group-button.mat-raised-button
+    flex: 1
+@media screen and (max-width: 767px)
+  .save-button.mat-raised-button
+    flex:1
+  .actionbuttons
+    flex: 1
+  .activate-group-button.mat-raised-button
+    flex: 1
+  .body-wrapper
+    flex: 1 1
+    min-height: 600px
+.defaultvalue
+  ::ng-deep .mat-form-field-outline
+    background-color: #fff2b6
+.dialog-reg-backgroud
+  background-color: #bbbbbbf2
+  backdrop-filter: blur(4px)
+.user-card
+  min-width: 210px
+  height: 110px
+  margin:5px
+.header-image
+  background-image: url('./../assets/images/avatar.png')
+  background-size: cover
+.card-content-title
+  padding-left:5px
+  padding-top: 5px
+  width: 160px
+  line-height: 10px
+.card-title
+  font-size:13px
+  font-weight: bold
+.card-sub-title
+  font-size:12px
+.card-content
+  line-height: 3px
+.add-button
+  background-color: #81ff8b
+.vert-button
+  position: absolute
+  top:0px
+  right:0px
+footer
+  background-color: #f5f5f5
+  padding:0px
+  flex-shrink: 0
+  margin-bottom: 0px
+.button-resize .mat-icon
+  font-size:16px !important
+  padding-bottom: 16px
+.button-resize
+  z-index: 6
+  margin-right:12px
+  height:24px
+  width: 24px

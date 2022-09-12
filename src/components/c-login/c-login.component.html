@@ -1,0 +1,26 @@
+<mat-card class="container_comp mat-elevation-z0" fxLayout="row wrap" fxLayoutAlign="center center">
+  <mat-card  class="mat-elevation-z5">
+    <mat-card-title>SST進捗管理システム</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="loginform" (ngSubmit)="submit()">
+        <mat-form-field>
+          <input type="text"  maxlength="10" matInput placeholder="ユーザー名" formControlName="usergid">
+          <mat-icon matSuffix>account_circle</mat-icon>
+          <mat-error *ngIf="loginform.get('usergid')?.invalid">{{userName()}}</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input type="password" matInput placeholder="パスワード" [type]="hide ? 'password' : 'text'" maxlength="25" autocomplete="on" formControlName="userpass">
+          <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginform.get('userpass')?.invalid">{{userPass()}}</mat-error>
+        </mat-form-field>
+        <mat-card class="table-button-container mat-elevation-z0">
+          <div fxLayout="col wrap" fxLayoutAlign="center center">
+            <button type="submit" class="add-button"  mat-stroked-button>ログイン</button>
+          </div>
+        </mat-card>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</mat-card>

@@ -1,0 +1,73 @@
+<div fxLayout="row wrap" class="form_title">
+  <div class="form-title" fxLayoutAlign="center center">
+    <h2>検索・ダウンロード</h2>
+  </div>
+</div>
+<mat-divider></mat-divider>
+<form [formGroup]="searchForm" (ngSubmit)="onSubmit()" (keydown.enter)="$event.preventDefault()">
+  <div mat-dialog-content>
+    <div class="export-form" fxLayout="col wrap" fxLayoutAlign="center center">
+      <mat-form-field appearance="outline" class="fieldflex">
+        <mat-label>*申請期間 ※現在日から過去1年間まで指定可能</mat-label>
+        <mat-date-range-input [rangePicker]="rangepicker" [max]="maxDate">
+          <input formControlName="dateFrom" readonly matStartDate trim="blur" (dateChange)="getSelectedDate($event)">
+          <input formControlName="dateTo" readonly matEndDate trim="blur">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="rangepicker" (click)="onClickDate()"></mat-datepicker-toggle>
+        <mat-date-range-picker #rangepicker></mat-date-range-picker>
+        <mat-error *ngIf="searchForm.get('dateTo')?.invalid">
+          {{toDate()}}</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="fieldflex">
+        <mat-label>文書番号</mat-label>
+        <input formControlName="docNumber" maxlength="15" (ngModelChange)="docnumberInput($event)" matInput trim="blur">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="fieldflex">
+        <mat-label>回答状況</mat-label>
+        <mat-select formControlName="progressID">
+          <mat-option *ngFor="let progress of progressList  | async" [value]="progress.sp_progress_id">
+            {{progress.sp_progress_desc}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="export-form2" fxLayout="col wrap" fxLayoutAlign="center center">
+      <mat-form-field appearance="outline" class="fieldflex">
+        <mat-label>登録拠点</mat-label>
+        <mat-select formControlName="baseID">
+          <mat-option *ngFor="let base of baseList  | async" [value]="base.stb_base_id">{{base.stb_base_desc}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="fieldflex">
+        <mat-label>登録工程</mat-label>
+        <mat-select formControlName="processID">
+          <mat-option *ngFor="let process of processList  | async" [value]="process.sp_process_id">
+            {{process.sp_process_desc}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="fieldflex">
+        <mat-label>使用ツール</mat-label>
+        <mat-select formControlName="usedTool">
+          <mat-option *ngFor="let tools of toolsUsedList  | async" [value]="tools.sst_tools_used">
+            {{tools.sst_tools_used}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div mat-dialog-actions class="action-form-buttons" fxLayout="row wrap" fxLayoutAlign="center center">
+    <button type="submit" mat-stroked-button class="buttons">
+      <mat-icon>cloud_download</mat-icon>
+    </button>
+    <button type="button" (click)="resetForm()" mat-stroked-button class="reset-button">
+      <mat-icon>refresh</mat-icon>
+    </button>
+    <span class="filler"></span>
+    <button type="button" (click)="closeDialog()" mat-stroked-button class="button-close">
+      <mat-icon>cancel</mat-icon>
+    </button>
+  </div>
+</form>

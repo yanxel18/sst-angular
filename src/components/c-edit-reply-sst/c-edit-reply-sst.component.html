@@ -1,0 +1,128 @@
+<mat-card class="container_comp mat-elevation-z0" fxLayoutAlign="center center">
+  <div class="multiple-form-container" fxLayout="row wrap" fxLayoutAlign="center center">
+    <mat-card class="create_form mat-elevation-z8">
+      <mat-card fxLayout="col wrap" class="title-container mat-elevation-z0">
+        <div fxLayout="row wrap" class="form_title">
+          <button type="button" (click)="goBack()" class="button-resize" mat-icon-button mat-raised-button>
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <div class="form-title" fxLayoutAlign="center center">
+            <h2>SST回答</h2>
+          </div>
+        </div>
+      </mat-card>
+      <form [formGroup]="sstFormReply" (ngSubmit)="onSubmit()" (keydown.enter)="$event.preventDefault()">
+        <mat-divider></mat-divider>
+        <div class="form-group2" fxLayout="col wrap" fxLayoutAlign="center center">
+          <mat-form-field appearance="outline" class="fieldflex defaultvalue">
+            <mat-label>*回答者</mat-label>
+            <input formControlName="usernametxt" readonly matInput trim="blur">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="fieldflex defaultvalue">
+            <mat-label>メールアドレス</mat-label>
+            <input matInput placeholder="taiyo-tarou@jty.yuden.co.jp" formControlName="emailtxt" readonly required trim="blur">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="fieldflex defaultvalue">
+            <mat-label>内線</mat-label>
+            <input formControlName="localNumberTxt" matInput readonly trim="blur">
+          </mat-form-field>
+        </div>
+        <div class="form-group" fxLayout="col wrap" fxLayoutAlign="center center">
+          <mat-form-field appearance="outline" class="fieldflex">
+            <mat-label>*展開可否</mat-label>
+            <mat-select formControlName="progressComboID" (selectionChange)="progressChange()">
+              <mat-option *ngFor="let val of progressComboSelect" [value]="val.id">{{val.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+
+          <mat-form-field appearance="outline" class="fieldflex">
+            <mat-label>*対象外理由</mat-label>
+            <mat-select formControlName="progressReasonID" >
+              <mat-option *ngFor="let val of reasonList | async" [value]="val.reasonID">{{val.reasonDesc}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="sstFormReply.get('progressReasonID')?.invalid">
+              {{progressReasonMsg()}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-group" fxLayout="col wrap" fxLayoutAlign="center center">
+          <mat-form-field appearance="outline" class="fieldflex">
+            <mat-label>*着手予定日ー＞*完了予定日</mat-label>
+            <mat-date-range-input [rangePicker]="rangepicker">
+              <input formControlName="lunchDate" [attr.disabled]="disableDateSelect()"   readonly matEndDate trim="blur">
+              <input formControlName="startDate" [attr.disabled]="disableDateSelect()"(dateChange)="minDateCompute()"  readonly matStartDate trim="blur">
+            </mat-date-range-input>
+            <mat-datepicker-toggle [hidden]="disableDateSelect()" matSuffix [for]="rangepicker" [hidden]="AccessRights.sar_sst_update===0"></mat-datepicker-toggle>
+            <mat-date-range-picker #rangepicker></mat-date-range-picker>
+            <mat-error *ngIf="sstFormReply.get('startDate')?.invalid || sstFormReply.get('lunchDate')?.invalid">
+              {{startendDateErrorMsg2()}}</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="fieldflex completedvalue">
+            <mat-label>完了日</mat-label>
+            <input formControlName="endDate" [min]="minDate" (dateChange)="endDate()" readonly matInput [matDatepicker]="datenow3" trim="blur">
+            <mat-datepicker-toggle matSuffix [for]="datenow3" [hidden]="AccessRights.sar_sst_update===0 || hideEndDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #datenow3></mat-datepicker>
+            <mat-error *ngIf="sstFormReply.get('endDate')?.invalid">{{endDateErrorMsg()}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="form-group" fxLayout="col wrap" fxLayoutAlign="center center">
+          <mat-form-field appearance="outline" class="fieldflex">
+            <mat-label>備考</mat-label>
+            <textarea formControlName="remarks" [readonly]="AccessRights.sar_sst_update===0" #remarks maxlength="4000" rows="8"  (keydown.enter)="$event.stopPropagation()" matInput></textarea>
+            <mat-hint align="end">{{remarks.value.length || 0}}/4000</mat-hint>
+          </mat-form-field>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="form-group button-area" fxLayout="col wrap" fxLayoutAlign="center center">
+          <button type="submit" *ngIf="AccessRights?.sar_sst_update!==0" class="save-button" mat-raised-button>
+            <mat-icon>save</mat-icon>
+          </button>
+          <button type="button" (click)="cancelform()" mat-stroked-button class="actionbuttons">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </div>
+      </form>
+    </mat-card>
+    <mat-card class="create_form mat-elevation-z8" *ngIf="AccessRights?.sar_sst_update!==0">
+      <div class="upload-title">
+        <h3>添付ファイル</h3>
+      </div>
+      <div class="upload-title">
+        <h5>※ファイルを1つずつアップロードしてください。サイズ上限：1ファイルにつき10MB</h5>
+      </div>
+      <mat-selection-list #SSTfilelist [multiple]="true">
+        <mat-list-option *ngFor="let x of sstFiles" [value]="x">
+          {{x.sar_filename}} - {{ calculateSize(x.sar_filesize)}}KB
+        </mat-list-option>
+      </mat-selection-list>
+      <div *ngIf="filenames" class="newfile-area">
+        <div class="upload-title">
+          <h3>新しいファイル</h3>
+        </div>
+        <mat-selection-list #SSTfilelistnew [multiple]="false">
+          <mat-list-option *ngFor="let x of filenames">
+            {{x.name}} - {{x.size}}KB
+          </mat-list-option>
+        </mat-selection-list>
+      </div>
+      <div class="form-group button-area" fxLayout="col wrap" fxLayoutAlign="center center">
+        <input type="file" class="file-input" accept=".pdf, .xlsm, .xls, .pptx, .doc, .docx, .jpg, .png, .jpeg, .gif, .bmp"
+         id="customFile" name="sstfiles" (change)="onFileSelect($event)"
+          #UploadFileInput>
+        <button type="button" class="filebuttons" (click)="UploadFileInput.click(); $event.preventDefault()"
+          mat-stroked-button>
+          <mat-icon>folder</mat-icon>
+        </button>
+        <button type="button" [disabled]="uploadbuttonEnable" class="filebuttons" (click)="uploadnewfile()"
+          mat-raised-button color="primary">
+          <mat-icon>cloud_upload</mat-icon>
+        </button>
+        <span class="spacer"></span>
+        <button type="button" *ngIf="sstFiles" (click)="deleteSelectedFile(SSTfilelist)" class="filebuttons"
+          mat-raised-button color="warn">
+          <mat-icon>delete_forever</mat-icon>
+        </button>
+      </div>
+    </mat-card>
+  </div>
+</mat-card>

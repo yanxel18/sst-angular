@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>活動内容修正</h1>
+<mat-divider></mat-divider>
+<form [formGroup]="activityForm" (ngSubmit)="updateActivity()" (keydown.enter)="$event.preventDefault()">
+  <div mat-dialog-content>
+    <div class="form-group2" fxLayout="col wrap" fxLayoutAlign="center center">
+      <mat-form-field appearance="outline" class="fieldflex defaultvalue">
+        <mat-label>*活動内容</mat-label>
+        <input formControlName="activitydesc" maxlength="300" matInput trim="blur">
+        <mat-error *ngIf="activityForm.get('activitydesc')?.invalid">{{ActivityErrorMsg()}}</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div mat-dialog-actions fxLayout="col wrap" fxLayoutAlign="center center">
+    <button type="submit" mat-raised-button class="save-button">
+      <mat-icon>save</mat-icon>
+    </button>
+    <button type="button" (click)="closeDialog()" mat-stroked-button class="actionbuttons">
+      <mat-icon>cancel</mat-icon>
+    </button>
+  </div>
+</form>

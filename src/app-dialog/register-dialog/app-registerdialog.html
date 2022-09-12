@@ -1,0 +1,86 @@
+<h1 mat-dialog-title>ユーザー登録</h1>
+<mat-divider></mat-divider>
+<div fxLayout="col wrap" fxLayoutAlign="center center" *ngIf="!$RegisterDropList">
+  <mat-spinner [diameter]="60"></mat-spinner>
+</div>
+<form [formGroup]="registerForm" (ngSubmit)="registerUser()" (keydown.enter)="$event.preventDefault()">
+  <div mat-dialog-content  *ngIf="$RegisterDropList">
+    <div class="form-group2" fxLayout="col wrap" fxLayoutAlign="center center">
+      <mat-form-field appearance="outline" class="fieldflex ">
+        <mat-label>*拠点</mat-label>
+        <mat-select formControlName="baseNameID">
+          <mat-option *ngFor="let base of $BaseList" [value]="base.stb_base_id">{{base.stb_base_desc}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="registerForm.get('baseNameID')?.invalid">{{baseselectErrorMsg()}}</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="fieldflex ">
+        <mat-label>*生産グループ</mat-label>
+        <mat-select formControlName="productionID">
+          <mat-option *ngFor="let prod of $RegisterDropList.ProcessGroupList" [value]="prod.stg_pgroup_id">
+            {{prod.stg_description}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="registerForm.get('productionID')?.invalid">{{baseselectErrorMsg()}}</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="form-group" fxLayout="col wrap" fxLayoutAlign="center center">
+      <mat-form-field appearance="outline" class="fieldflex ">
+        <mat-label>*GID</mat-label>
+        <input formControlName="gidFull" maxlength="10" matInput trim="blur">
+        <mat-error *ngIf="registerForm.get('gidFull')?.invalid">{{gIDErrorMsg()}}</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="fieldflex ">
+        <mat-label>*氏名</mat-label>
+        <input formControlName="fullName" maxlength="50" matInput trim="blur">
+        <mat-error *ngIf="registerForm.get('gidFull')?.invalid">{{gIDErrorMsg()}}</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="form-group" fxLayout="col wrap" fxLayoutAlign="center center">
+      <mat-form-field appearance="outline" class="fieldflex ">
+        <mat-label>メールアドレス</mat-label>
+        <input matInput maxlength="50" placeholder="taiyo@jty-yuden.co.jp" formControlName="emailAdd" required
+          trim="blur">
+        <mat-error *ngIf="registerForm.get('emailAdd')?.invalid">{{emailErrorMsg()}}</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="fieldflex ">
+        <mat-label>*内線</mat-label>
+        <input formControlName="localNumber" maxlength="15" matInput trim="blur">
+        <mat-error *ngIf="registerForm.get('localNumber')?.invalid">{{localPhoneErrorMsg()}}</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="form-group" fxLayout="col wrap" fxLayoutAlign="center center">
+      <mat-form-field appearance="outline" class="fieldflex">
+        <mat-label>*権限</mat-label>
+        <mat-select formControlName="accesslvlID">
+          <mat-option *ngFor="let access of $RegisterDropList.AccessLevelList" [value]="access.st_acclvl_id">
+            {{access.st_acclvl_desc}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="registerForm.get('accesslvlID')?.invalid">{{accessselectErrorMsg()}}</mat-error>
+      </mat-form-field>
+
+    </div>
+    <div class="form-group" fxLayout="col wrap" fxLayoutAlign="center center">
+      <mat-form-field appearance="outline" class="fieldflex ">
+        <mat-label>*パスワード</mat-label>
+        <input type="password" maxlength="25" formControlName="passwordA" matInput trim="blur" autocomplete="on">
+        <mat-error *ngIf="registerForm.get('passwordA')?.invalid">{{passwordAErrorMsg()}}</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="fieldflex ">
+        <mat-label>*パスワードを再入力</mat-label>
+        <input type="password" maxlength="25" formControlName="passwordB" matInput trim="blur" autocomplete="on">
+        <mat-error *ngIf="registerForm.get('passwordB')?.invalid">{{passwordBErrorMsg()}}</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div mat-dialog-actions fxLayout="col wrap" fxLayoutAlign="center center">
+    <button type="submit"  *ngIf="$RegisterDropList"  mat-raised-button class="save-button">
+      <mat-icon>save</mat-icon>
+    </button>
+    <button type="button" (click)="closeDialog()" mat-stroked-button class="actionbuttons">
+      <mat-icon>cancel</mat-icon>
+    </button>
+  </div>
+</form>

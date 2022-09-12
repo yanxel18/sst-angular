@@ -1,0 +1,62 @@
+<div fxLayout="col wrap">
+  <h2 mat-dialog-title>活動内容リスト</h2> <span class="spacer"></span>
+  <button type="button" color="primary"[matMenuTriggerFor]="menu"  mat-icon-button  class="activate-group-button">
+    <mat-icon>playlist_add</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu" xPosition="before">
+    <button mat-menu-item (click)="openDialogCreateActivity()" >
+      <mat-icon>add</mat-icon>
+      <span>活動登録</span>
+    </button>　
+    <button mat-menu-item (click)="openDialogActivityGroup()">
+      <mat-icon>view_module</mat-icon>
+      <span>活動グループ</span>
+    </button>
+  </mat-menu>　
+</div>
+<mat-divider></mat-divider>
+<div mat-dialog-content>
+  <div class="loader" fxLayout="col wrap" fxLayoutAlign="center center" *ngIf="!$ActivityList">
+    <mat-spinner [diameter]="60"></mat-spinner>
+  </div>
+  <form [formGroup]="activityForm" (keydown.enter)="$event.preventDefault()">
+    <div class="activitiy-group-list" fxLayout="row wrap" fxLayoutAlign="center center" *ngIf="$ActivityList">
+      <mat-form-field appearance="outline" class="group-list">
+        <mat-label>活動グループリスト</mat-label>
+        <mat-select formControlName="groupList" (selectionChange)="selectGroup($event.value)">
+          <mat-option *ngFor="let list of $groupListItem " [value]="list.stg_id">
+            {{list.stg_group}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button type="button" color="primary" (click)="enableActivityList()" mat-raised-button class="activate-group-button">
+        <mat-icon>check_circle</mat-icon>
+      </button>
+    </div>
+  </form>
+  <div class="activity-form" fxLayout="row wrap" fxLayoutAlign="center center" *ngIf="$ActivityList">
+    <table mat-table [dataSource]="$ActivityList" class="mat-elevation-z0 table-container">
+      <ng-container matColumnDef="活動内容">
+        <th mat-header-cell *matHeaderCellDef>活動内容</th>
+        <td mat-cell *matCellDef="let element"> {{element.stc_content_desc}} </td>
+      </ng-container>
+      <ng-container matColumnDef="操作">
+        <th mat-header-cell *matHeaderCellDef> 操作</th>
+        <td mat-cell *matCellDef="let element">
+          <button class="button-resize" color="primary" (click)="openDialogEditActivity(element)" mat-icon-button
+            mat-raised-button>
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="element-row"></tr>
+    </table>
+  </div>
+</div>
+<mat-divider></mat-divider>
+<div mat-dialog-actions fxLayout="col wrap" fxLayoutAlign="center center">
+  <button type="button" (click)="closeDialog()" mat-stroked-button class="actionbuttons">
+    <mat-icon>cancel</mat-icon>
+  </button>
+</div>

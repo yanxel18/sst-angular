@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>パスワード変更</h1>
+<mat-divider></mat-divider>
+<form [formGroup]="registerForm" (ngSubmit)="registerUser()" (keydown.enter)="$event.preventDefault()">
+  <div mat-dialog-content>
+    <div class="form-group2" fxLayout="col wrap" fxLayoutAlign="center center">
+      <mat-form-field appearance="outline" class="fieldflex ">
+        <mat-label>*パスワード</mat-label>
+        <input type="password" maxlength="25" autocomplete="on" formControlName="passwordA" matInput trim="blur">
+        <mat-error *ngIf="registerForm.get('passwordA')?.invalid">{{passwordAErrorMsg()}}</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="fieldflex ">
+        <mat-label>*パスワードを再入力</mat-label>
+        <input type="password" maxlength="25" autocomplete="on" formControlName="passwordB" matInput trim="blur">
+        <mat-error *ngIf="registerForm.get('passwordB')?.invalid">{{passwordBErrorMsg()}}</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div mat-dialog-actions fxLayout="col wrap" fxLayoutAlign="center center">
+    <button type="submit" mat-raised-button class="save-button">
+      <mat-icon>save</mat-icon>
+    </button>
+    <button type="button" (click)="closeDialog()" mat-stroked-button class="actionbuttons">
+      <mat-icon>cancel</mat-icon>
+    </button>
+  </div>
+</form>
