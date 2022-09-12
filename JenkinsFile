@@ -1,14 +1,5 @@
 pipeline {
-  stages {
     stage('SonarQube analysis') {
-      steps {
-        script {
-          def scannerHome = tool 'sonarscan';
-          withSonarQubeEnv(installationName: 'SonarQubeServer') {
             bat "npm run sonar"
-          }
-        }
-      }
     }
-  }
 }
