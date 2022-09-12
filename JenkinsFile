@@ -1,5 +1,11 @@
 pipeline {
+  agent any
+  stages{
     stage('SonarQube analysis') {
-            bat "npm run sonar"
+      steps{
+          npm run sonar
+      }
+
     }
+  }
 }
