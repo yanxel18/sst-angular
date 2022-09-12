@@ -1,11 +1,8 @@
 pipeline {
-  agent any
-  stages{
+
     stage('SonarQube analysis') {
       steps{
           npm run sonar
       }
-
     }
-  }
 }
