@@ -1,14 +1,13 @@
 pipeline {
-    agent any
-    stages {
-        stage('SonarQube analysis') {
-            steps {
-                withSonarQubeEnv('SonarQubeServer') {
-                    // Optionally use a Maven environment you've configured already
-                     sh "${scannerHome}/bin/sonar-scanner"
-                }
-            }
+  stages {
+    stage('SonarQube analysis') {
+      steps {
+        script {
+          def scannerHome = tool 'sonarscan';
+          withSonarQubeEnv('SonarQubeServer') {
+            sh "${tool("sonarscan ")}/bin/sonar-scanner -D'sonar.projectKey=sst-angular' -D'sonar.sources=.'  -D'sonar.login=sqp_c32a755969cc01b9362d33508f267cbcefbdd486'"
+          }
         }
-
+      }
     }
 }
