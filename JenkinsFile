@@ -1,7 +1,7 @@
 pipeline {
-    stage('SonarQube analysis') {
+   stage('SonarQube analysis') {
       steps {
-         sh  'npm run sonar'
+         bat  'npm run sonar'
       }
     }
 }
