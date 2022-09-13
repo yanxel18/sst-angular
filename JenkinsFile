@@ -8,7 +8,7 @@ pipeline{
       }
     stage('Scan SonarQube analysis') {
       steps {
-          withSonarQubeEnv(installationName: 'SonarQubeServer') {
+          withSonarQubeEnv(installationName: 'SonarQubeServer', credentialsId: 'sonarqube-jenkins') {
           bat 'npm run sonar'
         }
       }
