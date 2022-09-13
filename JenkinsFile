@@ -1,5 +1,5 @@
 pipeline {
-  agent analysis
+  agent any
     stages {
       stage ("clone") {
         steps {
