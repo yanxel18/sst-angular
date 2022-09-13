@@ -1,7 +1,7 @@
-pipeline {
+node {
    stage('SonarQube analysis') {
       steps {
          bat  'npm run sonar'
-      }
+
     }
 }
