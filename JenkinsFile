@@ -1,11 +1,6 @@
 pipeline {
   agent any
     stages {
-      stage ("clone") {
-        steps {
-          git checkout([$class: 'GitSCM', branches: [[name: 'sst-angular-sonar']], extensions: [], userRemoteConfigs: [[credentialsId: '71996870-71d5-4a26-b319-9a6dc3fe80cd', url: 'https://github.com/yanxel18/sst-angular.git']]])
-        }
-      }
    stage('SonarQube analysis') {
       steps {
          bat  'npm run sonar'
