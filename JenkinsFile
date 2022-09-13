@@ -3,7 +3,7 @@ pipeline{
     stages {
       stage('Install Dependency') {
         steps{
-          bat 'npm install'
+          bat 'npm install --force'
         }
       }
     stage('SonarQube analysis') {
