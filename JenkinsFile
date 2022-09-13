@@ -11,5 +11,10 @@ pipeline{
         bat 'npm run sonar'
       }
     }
+    stage('Quality Gate') {
+      steps {
+        waitForQualityGate abortPipeline: true
+      }
+    }
   }
 }
