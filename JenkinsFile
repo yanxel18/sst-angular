@@ -1,12 +1,15 @@
-pipeline {
+pipeline{
   agent any
     stages {
-   stage('SonarQube analysis') {
+      stage('Install Dependency') {
+        steps{
+          bat 'npm install'
+        }
+      }
+    stage('SonarQube analysis') {
       steps {
-         bat  'npm run sonar'
+        bat 'npm run sonar'
       }
     }
-    }
-
-
+  }
 }
