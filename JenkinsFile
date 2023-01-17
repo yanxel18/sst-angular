@@ -1,24 +1,25 @@
-pipeline{
-  agent any
+/* groovylint-disable CompileStatic */
+pipeline {
+    agent any
     stages {
-      stage('Install Dependency') {
-        steps {
-          bat 'npm install --force'
+        stage('Install Dependency') {
+            steps {
+                bat 'npm install --force'
+            }
         }
-      }
-    stage('Scan SonarQube analysis') {
-      steps {
-          withSonarQubeEnv(installationName: 'SonarQubeServer', credentialsId: 'sonarqube-jenkins') {
-          bat 'npm run sonar'
+        stage('Scan SonarQube analysis') {
+            steps {
+                withSonarQubeEnv(installationName: 'SonarQubeServer', credentialsId: 'sonarqube-jenkins') {
+                    bat 'npm run sonar'
+                }
+            }
         }
-      }
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
     }
-    stage('Quality Gate') {
-      steps {
-        timeout(time: 2, unit: 'MINUTES') {
-            waitForQualityGate abortPipeline: true
-        }
-      }
-    }
-  }
 }
