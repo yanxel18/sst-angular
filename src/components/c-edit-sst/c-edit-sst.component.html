@@ -91,7 +91,7 @@
         <div class="form-group" fxLayout="col wrap" fxLayoutAlign="center center">
           <mat-form-field appearance="outline" class="fieldflex">
             <mat-label>*工程</mat-label>
-            <mat-select formControlName="processListTxt" (ngModelChange)="sstFormValue.processListTxt = $event" [disabled]="AccessRights.sar_sst_update===0">
+            <mat-select formControlName="processListTxt" (ngModelChange)="sstFormValue.processListTxt = $event">
               <mat-option *ngFor="let process of processOptions" [value]="process" class="combotext">{{process}}
               </mat-option>
             </mat-select>
@@ -112,7 +112,7 @@
         <div class="form-group" fxLayout="col wrap" fxLayoutAlign="center center">
           <mat-form-field appearance="outline" class="fieldflex">
             <mat-label>*活動内容</mat-label>
-            <mat-select formControlName="activityListTxt" (ngModel)="sstFormValue.activityListTxt" [disabled]="AccessRights.sar_sst_update===0"
+            <mat-select formControlName="activityListTxt" (ngModel)="sstFormValue.activityListTxt"
               (ngModelChange)="sstFormValue.activityListTxt = $event">
               <mat-option *ngFor="let activity of $ActivityList  | async" [value]="activity.stc_id">
                 {{activity.stc_content_desc}}

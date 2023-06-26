@@ -15,7 +15,7 @@
         <mat-divider></mat-divider>
         <div class="form-group2" fxLayout="col wrap" fxLayoutAlign="center center">
           <mat-form-field appearance="outline" class="fieldflex defaultvalue">
-            <mat-label>*回答者</mat-label>
+            <mat-label>回答者</mat-label>
             <input formControlName="usernametxt" readonly matInput trim="blur">
           </mat-form-field>
           <mat-form-field appearance="outline" class="fieldflex defaultvalue">
@@ -29,7 +29,7 @@
         </div>
         <div class="form-group" fxLayout="col wrap" fxLayoutAlign="center center">
           <mat-form-field appearance="outline" class="fieldflex">
-            <mat-label>*展開可否</mat-label>
+            <mat-label>展開可否</mat-label>
             <mat-select formControlName="progressComboID" (selectionChange)="progressChange()">
               <mat-option *ngFor="let val of progressComboSelect" [value]="val.id">{{val.name}}</mat-option>
             </mat-select>
@@ -37,8 +37,8 @@
 
 
           <mat-form-field appearance="outline" class="fieldflex">
-            <mat-label>*対象外理由</mat-label>
-            <mat-select formControlName="progressReasonID" >
+            <mat-label>対象外理由</mat-label>
+            <mat-select formControlName="progressReasonID" (selectionChange)="reasonChange()" >
               <mat-option *ngFor="let val of reasonList | async" [value]="val.reasonID">{{val.reasonDesc}}</mat-option>
             </mat-select>
             <mat-error *ngIf="sstFormReply.get('progressReasonID')?.invalid">
@@ -47,7 +47,7 @@
         </div>
         <div class="form-group" fxLayout="col wrap" fxLayoutAlign="center center">
           <mat-form-field appearance="outline" class="fieldflex">
-            <mat-label>*着手予定日ー＞*完了予定日</mat-label>
+            <mat-label>着手予定日ー＞完了予定日</mat-label>
             <mat-date-range-input [rangePicker]="rangepicker">
               <input formControlName="lunchDate" [attr.disabled]="disableDateSelect()"   readonly matEndDate trim="blur">
               <input formControlName="startDate" [attr.disabled]="disableDateSelect()"(dateChange)="minDateCompute()"  readonly matStartDate trim="blur">
@@ -68,7 +68,7 @@
         <div class="form-group" fxLayout="col wrap" fxLayoutAlign="center center">
           <mat-form-field appearance="outline" class="fieldflex">
             <mat-label>備考</mat-label>
-            <textarea formControlName="remarks" [readonly]="AccessRights.sar_sst_update===0" #remarks maxlength="4000" rows="8"  (keydown.enter)="$event.stopPropagation()" matInput></textarea>
+            <textarea formControlName="remarks" [readonly]="AccessRights.sar_sst_update===0" #remarks maxlength="4000" rows="8"  (keydown.enter)="$event.stopPropagation()" matInput trim="blur"></textarea>
             <mat-hint align="end">{{remarks.value.length || 0}}/4000</mat-hint>
           </mat-form-field>
         </div>

@@ -47,11 +47,11 @@ export class CEditSstComponent implements OnInit, OnDestroy {
   $baseOptions: Observable<Model.IBase[] | [] | undefined> | undefined;
   $ActivityList!: Observable<Model.ActivityList[]>;
   machinefilteredOptions: Observable<string[]> | undefined;
-  processfilteredOptions: Observable<string[]> | undefined;
-  awarenessfilteredOptions: Observable<string[]> | undefined;
-  analysisfilteredOptions: Observable<string[]> | undefined;
-  actionfilteredOptions: Observable<string[]> | undefined;
-  resultfilteredOptions: Observable<string[]> | undefined;
+  processfilteredOptions!: Observable<string[]> | undefined;
+  awarenessfilteredOptions!: Observable<string[]> | undefined;
+  analysisfilteredOptions!: Observable<string[]> | undefined;
+  actionfilteredOptions!: Observable<string[]> | undefined;
+  resultfilteredOptions!: Observable<string[]> | undefined;
 
   machineOptions: string[] = [];
   processOptions: string[] = [];
@@ -97,31 +97,31 @@ export class CEditSstComponent implements OnInit, OnDestroy {
   }
 
   emailErrorMessage(): string | null {
-    if (this.sstForm.get('emailTxt')!.hasError('required')) {
-      return '空白は禁止！';
-    } else if (this.sstForm.get('emailTxt')!.hasError('email')) {
+    if (this.sstForm.get('emailTxt')!.hasError('required')) 
+      return 'メールアドレス必須';
+     else if (this.sstForm.get('emailTxt')!.hasError('email')) 
       return 'メールフォーマットが間違っています！';
-    }
+    
     return null;
   }
   lunchDateErrorMsg(): string | null {
-    if (this.sstForm.get("lunchDate")?.hasError('required')) {
+    if (this.sstForm.get("lunchDate")?.hasError('required')) 
       return '空白は禁止！';
-    }
     return null;
   }
   startendDateErrorMsg(): string | null {
-    if (this.sstForm.get("startDate")?.hasError('required')) {
+    if (this.sstForm.get("startDate")?.hasError('required')) 
       return '空白は禁止！';
-    } else if (this.sstForm.get("endDate")?.hasError('required')) {
+     else if (this.sstForm.get("endDate")?.hasError('required')) 
       return '終了日を選択してください。';
-    }
+    
     return null;
   }
   startendDateErrorMsg2(): string | null {
     if (this.sstForm.get("lunchDate")?.hasError('required')) {
       return '空白は禁止！。';
-    } if (this.sstForm.get("startDate")?.hasError('required')) {
+    } 
+    if (this.sstForm.get("startDate")?.hasError('required')) {
       return '空白は禁止！';
     }
     return null;
@@ -207,7 +207,15 @@ export class CEditSstComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.store.select(SSTSelectors.getUserInfo).pipe(
       map(t => t[0]?.su_access_rights![0])).subscribe(data => {
+        if (data) { 
         this.AccessRights = data;
+        this.AccessRights.sar_sst_update ===0 ? 
+          this.sstForm.get("processListTxt")?.disable(): 
+          this.sstForm.get("processListTxt")?.enable();
+          this.AccessRights.sar_sst_update ===0 ? 
+          this.sstForm.get("activityListTxt")?.disable(): 
+          this.sstForm.get("activityListTxt")?.enable();  
+        }
       });
 
     this.loadtoValue();
@@ -280,13 +288,13 @@ export class CEditSstComponent implements OnInit, OnDestroy {
       applyUserName: new UntypedFormControl(this.sstFormValue.userFullName, [Validators.required]),
       baseListCombo: new UntypedFormControl({ value: this.sstFormValue.baseID, disabled: true }),
       localNumberTxt: new UntypedFormControl(this.sstFormValue.localNumberTxt),
-      activityListTxt: new UntypedFormControl(this.sstFormValue.activityListTxt, [Validators.required]),
+      activityListTxt: new UntypedFormControl( {value:this.sstFormValue.activityListTxt, disabled:false }  , [Validators.required]),
       lunchDate: new UntypedFormControl(this.sstFormValue.lunchDate, [Validators.required]),
       startDate: new UntypedFormControl(this.sstFormValue.startDate, [Validators.required]),
       endDate: new UntypedFormControl(this.sstFormValue.endDate),
       conditionTxt: new UntypedFormControl(this.sstFormValue.conditionTxt, [Validators.required]),
       machineListTxt: new UntypedFormControl(this.sstFormValue.machineListTxt, [Validators.required]),
-      processListTxt: new UntypedFormControl(this.sstFormValue.processListTxt, [Validators.required]),
+      processListTxt: new UntypedFormControl({value:this.sstFormValue.processListTxt, disabled: false }, [Validators.required]),
       expectedEffectTxt: new UntypedFormControl(this.sstFormValue.expectedEffectTxt, [Validators.required]),
       awarenessToolListTxt: new UntypedFormControl(this.sstFormValue.awarenessToolListTxt),
       analysisToolListTxt: new UntypedFormControl(this.sstFormValue.analysisToolListTxt),

@@ -190,15 +190,15 @@ export class CEditReplySstComponent implements OnInit, OnDestroy, AfterViewInit 
     ]);
     this.sstFormReply.controls['progressReasonID'].updateValueAndValidity();
   }
-  async ngOnInit(): Promise<void> {
+   ngOnInit(): void {
     this.store
       .select(SSTSelectors.getUserInfo)
       .pipe(map((t) => t[0]?.su_access_rights![0]))
       .subscribe((data) => {
         this.AccessRights = data;
       });
-    await this.loadDefaultValue();
-    await this.initializeData();
+     this.loadDefaultValue();
+     this.initializeData();
 
     this.disableDateSelect();
   }
@@ -271,6 +271,8 @@ export class CEditReplySstComponent implements OnInit, OnDestroy, AfterViewInit 
   ];
 
   disableDateSelect(): boolean {
+    let disableSelect : boolean ;
+ 
     if (
       this.sstFormReply.get('progressComboID')?.value === 3 ||
       this.sstFormReply.get('progressComboID')?.value === 4
@@ -281,7 +283,7 @@ export class CEditReplySstComponent implements OnInit, OnDestroy, AfterViewInit 
       this.sstFormReply.controls['startDate'].clearValidators();
       this.sstFormReply.controls['lunchDate'].updateValueAndValidity();
       this.sstFormReply.controls['startDate'].updateValueAndValidity();
-      return true;
+      disableSelect = true;
     } else {
       this.sstFormReply.controls['lunchDate'].setValidators([
         Validators.required,
@@ -289,10 +291,15 @@ export class CEditReplySstComponent implements OnInit, OnDestroy, AfterViewInit 
       this.sstFormReply.controls['startDate'].setValidators([
         Validators.required,
       ]);
-      this.sstFormReply.controls['lunchDate'].updateValueAndValidity();
+      
       this.sstFormReply.controls['startDate'].updateValueAndValidity();
-      return false;
+      disableSelect = false;
     }
+ 
+
+
+    return disableSelect;
+
   }
   events: string[] = [];
   endDate(): void {
@@ -319,7 +326,7 @@ export class CEditReplySstComponent implements OnInit, OnDestroy, AfterViewInit 
     endDate: new UntypedFormControl(null),
     remarks: new UntypedFormControl(''),
   });
-  async loadDefaultValue(): Promise<void> {
+   loadDefaultValue(): void {
     this.reasonList = this.ceditreplySSTService.getReasonList();
     this.appSubscription.push(
       this.store.select(SSTSelectors.getUserInfo).subscribe((data) => {
@@ -480,14 +487,14 @@ export class CEditReplySstComponent implements OnInit, OnDestroy, AfterViewInit 
     if (this.sstFormReply.get('lunchDate')?.hasError('required')) {
       return '空白は禁止！';
     }
-    if (this.sstFormReply.get('startDate')?.hasError('required')) {
+    else if (this.sstFormReply.get('startDate')?.hasError('required')) {
       return '空白は禁止！';
     }
     return null;
   }
   currentYear!: Date;
   minDate!: Date;
-  async initializeData(): Promise<void> {
+   initializeData(): void {
     if (this.sstReplyDefaultValue.length > 0) {
       this.currentYear = new Date(
         this.sstReplyDefaultValue[0].str_schedulestart_date
@@ -539,6 +546,17 @@ export class CEditReplySstComponent implements OnInit, OnDestroy, AfterViewInit 
       this.resetReasonSelect();
   }
 
+  reasonChange(): void {
+    if (this.sstFormReply.controls['progressReasonID'].value===12) {
+      this.sstFormReply.controls['remarks'].setValidators([
+        Validators.required,
+      ]);
+      this.sstFormReply.controls['remarks'].updateValueAndValidity();
+    } else {
+      this.sstFormReply.controls['remarks'].clearValidators();
+      this.sstFormReply.controls['remarks'].updateValueAndValidity();
+    }
+  }
   ngOnDestroy(): void {
     this.appSubscription.forEach((s) => s.unsubscribe());
   }

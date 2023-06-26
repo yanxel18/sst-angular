@@ -88,7 +88,7 @@ registerLocaleData(localeJa);
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        allowedDomains: ['172.21.20.90:3000','172.31.12.206:3000']
+        allowedDomains: environment.AllowedDomain
       }
     }),
     BrowserAnimationsModule,
